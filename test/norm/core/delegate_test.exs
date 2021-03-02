@@ -21,6 +21,11 @@ defmodule Norm.Core.DelegateTest do
                  TreeTest.spec()
                )
 
+      assert valid?(
+               %{"value" => 4, "left" => %{"value" => 2}, "right" => %{"value" => 12}},
+               TreeTest.spec()
+             )
+
       assert {:error, [%{input: "12", path: ["left", "left", "value"], spec: "is_integer()"}]} =
                conform(
                  %{
@@ -30,6 +35,15 @@ defmodule Norm.Core.DelegateTest do
                  },
                  TreeTest.spec()
                )
+
+      refute valid?(
+               %{
+                 "value" => 4,
+                 "left" => %{"value" => 2, "left" => %{"value" => "12"}},
+                 "right" => %{"value" => 12}
+               },
+               TreeTest.spec()
+             )
     end
   end
 end
